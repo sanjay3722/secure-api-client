@@ -11,10 +11,7 @@ const concat = (a: Uint8Array, b: Uint8Array) => {
 };
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
-  view.buffer.slice(
-    view.byteOffset,
-    view.byteOffset + view.byteLength
-  ) as ArrayBuffer;
+  view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength) as ArrayBuffer;
 
 export class AesGcmEncryption implements EncryptionAdapter {
   private keyPromise: Promise<CryptoKey>;
@@ -24,21 +21,19 @@ export class AesGcmEncryption implements EncryptionAdapter {
     this.keyPromise = this.deriveKey(secret);
   }
 
-  private async deriveKey(
-    secret: string | ArrayBuffer | Uint8Array
-  ): Promise<CryptoKey> {
+  private async deriveKey(secret: string | ArrayBuffer | Uint8Array): Promise<CryptoKey> {
     const data: Uint8Array =
       typeof secret === "string"
         ? textEncoder.encode(secret)
         : secret instanceof Uint8Array
-        ? secret
-        : new Uint8Array(secret);
+          ? secret
+          : new Uint8Array(secret);
     const keyMaterial = await crypto.subtle.importKey(
       "raw",
       toArrayBuffer(data),
       { name: "PBKDF2" },
       false,
-      ["deriveKey"]
+      ["deriveKey"],
     );
     const salt = textEncoder.encode("secure-api-client");
     return crypto.subtle.deriveKey(
@@ -46,7 +41,7 @@ export class AesGcmEncryption implements EncryptionAdapter {
       keyMaterial,
       { name: "AES-GCM", length: 256 },
       false,
-      ["encrypt", "decrypt"]
+      ["encrypt", "decrypt"],
     );
   }
 
@@ -56,7 +51,7 @@ export class AesGcmEncryption implements EncryptionAdapter {
     const buf = await crypto.subtle.encrypt(
       { name: "AES-GCM", iv: toArrayBuffer(iv) },
       key,
-      toArrayBuffer(data)
+      toArrayBuffer(data),
     );
     return concat(iv, new Uint8Array(buf));
   }
@@ -68,13 +63,12 @@ export class AesGcmEncryption implements EncryptionAdapter {
     const buf = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv: toArrayBuffer(iv) },
       key,
-      toArrayBuffer(ciphertext)
+      toArrayBuffer(ciphertext),
     );
     return new Uint8Array(buf);
   }
 }
 
-export const encodeJson = (value: unknown): Uint8Array =>
-  textEncoder.encode(JSON.stringify(value));
+export const encodeJson = (value: unknown): Uint8Array => textEncoder.encode(JSON.stringify(value));
 export const decodeJson = <T = unknown>(data: Uint8Array): T =>
   JSON.parse(textDecoder.decode(data)) as T;

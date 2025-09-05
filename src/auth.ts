@@ -1,11 +1,6 @@
 import { decodeJwt } from "jose";
-import type {
-  ApiError,
-  AuthConfig,
-  TokenMetadata,
-  TokenPair,
-  TokenStorage,
-} from "./types";
+
+import type { AuthConfig, TokenMetadata, TokenPair, TokenStorage } from "./types";
 
 export class MemoryTokenStorage implements TokenStorage {
   private tokens: TokenPair & TokenMetadata = {
@@ -72,9 +67,10 @@ export class AuthManager {
     if (tokens.accessToken) {
       try {
         payload = decodeJwt(tokens.accessToken);
-        if (typeof payload.exp === "number")
-          accessTokenExpiresAt = payload.exp * 1000;
-      } catch {}
+        if (typeof payload.exp === "number") accessTokenExpiresAt = payload.exp * 1000;
+      } catch {
+        // ignore invalid JWT during metadata enrichment
+      }
     }
     return { payload, accessTokenExpiresAt };
   }

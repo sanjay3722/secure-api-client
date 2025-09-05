@@ -97,4 +97,5 @@ const client = new ApiClient({
 - `ApiClient.clearTokens()`
 - `ApiClient.withEncryption(secret)` returns a new `ApiClient` with AES-GCM adapter
 - `AesGcmEncryption` implements `EncryptionAdapter`
+
 # secure-api-client

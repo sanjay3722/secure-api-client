@@ -1,9 +1,6 @@
 import type { StreamHandlers } from "./types";
 
-export async function streamResponse(
-  response: Response,
-  handlers: StreamHandlers<Uint8Array>
-) {
+export async function streamResponse(response: Response, handlers: StreamHandlers<Uint8Array>) {
   const { onStart, onChunk, onError, onComplete } = handlers;
   onStart?.(response.status, response.headers);
   const reader = response.body?.getReader();
@@ -20,7 +17,7 @@ export async function streamResponse(
     onComplete?.();
   } catch (e) {
     // Defer throw to consumer but allow callback
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     onError?.(e as any);
     throw e;
   } finally {

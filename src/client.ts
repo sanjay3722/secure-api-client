@@ -1,30 +1,22 @@
 import "cross-fetch/polyfill";
+
 import { nanoid } from "nanoid";
+
 import { AuthManager } from "./auth";
-import { LruCacheAdapter, InFlightDeduper } from "./cache";
+import { InFlightDeduper, LruCacheAdapter } from "./cache";
 import { AesGcmEncryption, decodeJson, encodeJson } from "./crypto";
-import { streamResponse } from "./stream";
-import {
-  ApiError,
-  ApiErrorShape,
-  ApiRequest,
-  ApiResponse,
-  ClientOptions,
-  HttpMethod,
-} from "./types";
 import { makeErrorShape, toApiError } from "./errors";
+import { streamResponse } from "./stream";
+import { ApiErrorShape, ApiRequest, ApiResponse, ClientOptions, HttpMethod } from "./types";
 
 const buildUrl = (
   baseUrl: string | undefined,
   path: string,
-  query?: ApiRequest["query"]
+  query?: ApiRequest["query"],
 ): string => {
   const url = new URL(
     path,
-    baseUrl ??
-      (typeof window !== "undefined"
-        ? window.location.origin
-        : "http://localhost")
+    baseUrl ?? (typeof window !== "undefined" ? window.location.origin : "http://localhost"),
   );
   if (query) {
     for (const [k, v] of Object.entries(query)) {
@@ -38,7 +30,7 @@ const buildUrl = (
 const methodToInit = (
   method: HttpMethod,
   body: unknown,
-  encryption: ClientOptions["encryption"]
+  encryption: ClientOptions["encryption"],
 ): RequestInit => {
   if (method === "GET" || method === "DELETE") return {};
   if (method === "FORMDATA") {
@@ -57,24 +49,18 @@ const methodToInit = (
 
 const defaultHeadersFor = (
   method: HttpMethod,
-  encryption: ClientOptions["encryption"]
+  encryption: ClientOptions["encryption"],
 ): Record<string, string> => {
   const headers: Record<string, string> = {};
   if (method !== "GET" && method !== "DELETE" && method !== "FORMDATA") {
-    headers["content-type"] = encryption
-      ? "application/octet-stream"
-      : "application/json";
+    headers["content-type"] = encryption ? "application/octet-stream" : "application/json";
   }
-  headers["accept"] =
-    "application/json, application/octet-stream;q=0.8, */*;q=0.5";
+  headers["accept"] = "application/json, application/octet-stream;q=0.8, */*;q=0.5";
   return headers;
 };
 
 const toArrayBuffer = (view: Uint8Array): ArrayBuffer =>
-  view.buffer.slice(
-    view.byteOffset,
-    view.byteOffset + view.byteLength
-  ) as ArrayBuffer;
+  view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength) as ArrayBuffer;
 
 interface InternalOptions {
   baseUrl?: string;
@@ -110,15 +96,12 @@ export class ApiClient {
     this.cache =
       this.options.cache === false
         ? null
-        : (this.options.cache as LruCacheAdapter<ApiResponse>) ??
-          new LruCacheAdapter<ApiResponse>();
+        : ((this.options.cache as LruCacheAdapter<ApiResponse>) ??
+          new LruCacheAdapter<ApiResponse>());
     this.inflight = new InFlightDeduper<ApiResponse>();
   }
 
-  async setTokens(tokens: {
-    accessToken: string;
-    refreshToken?: string | null;
-  }): Promise<void> {
+  async setTokens(tokens: { accessToken: string; refreshToken?: string | null }): Promise<void> {
     await this.auth.setTokens({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken ?? null,
@@ -137,8 +120,7 @@ export class ApiClient {
   async request<T = unknown>(req: ApiRequest): Promise<ApiResponse<T>> {
     const method: HttpMethod = req.method ?? "GET";
     const url = buildUrl(this.options.baseUrl, req.url, req.query);
-    const cacheKey =
-      req.cacheKey ?? `${method}:${url}:${JSON.stringify(req.body ?? null)}`;
+    const cacheKey = req.cacheKey ?? `${method}:${url}:${JSON.stringify(req.body ?? null)}`;
 
     if (this.cache) {
       const cached = this.cache.get(cacheKey) as ApiResponse<T> | undefined;
@@ -155,15 +137,14 @@ export class ApiClient {
         this.cache.set(cacheKey, res as ApiResponse, this.options.cacheTtlMs);
       return res;
     });
-    if (this.options.enableInFlightDedup)
-      this.inflight.set(cacheKey, exec as Promise<ApiResponse>);
+    if (this.options.enableInFlightDedup) this.inflight.set(cacheKey, exec as Promise<ApiResponse>);
     return exec;
   }
 
   private async execute<T>(
     url: string,
     method: HttpMethod,
-    req: ApiRequest
+    req: ApiRequest,
   ): Promise<ApiResponse<T>> {
     const headers: Record<string, string> = {
       ...defaultHeadersFor(method, this.options.encryption),
@@ -185,9 +166,7 @@ export class ApiClient {
 
       if (this.options.encryption && init.body instanceof Blob) {
         const arrayBuffer = await init.body.arrayBuffer();
-        const encrypted = await this.options.encryption.encrypt(
-          new Uint8Array(arrayBuffer)
-        );
+        const encrypted = await this.options.encryption.encrypt(new Uint8Array(arrayBuffer));
         // If gateway mode is enabled, send both target url and payload in encrypted envelope
         if (this.options.gatewayPath) {
           const envelope = encodeJson({
@@ -209,10 +188,8 @@ export class ApiClient {
       }
 
       response = await this.options.fetch(
-        this.options.gatewayPath
-          ? buildUrl(this.options.baseUrl, this.options.gatewayPath)
-          : url,
-        init
+        this.options.gatewayPath ? buildUrl(this.options.baseUrl, this.options.gatewayPath) : url,
+        init,
       );
     } catch (e) {
       const err = toApiError(e, "ERR_NETWORK");
@@ -247,10 +224,7 @@ export class ApiClient {
     try {
       const contentType = response.headers.get("content-type") ?? "";
       let data: unknown;
-      if (
-        contentType.includes("application/octet-stream") &&
-        this.options.encryption
-      ) {
+      if (contentType.includes("application/octet-stream") && this.options.encryption) {
         const buf = new Uint8Array(await response.arrayBuffer());
         const dec = await this.options.encryption.decrypt(buf);
         data = decodeJson(dec);
@@ -262,9 +236,7 @@ export class ApiClient {
       }
       if (!response.ok) {
         const shape: ApiErrorShape =
-          typeof data === "object" &&
-          data &&
-          "code" in (data as Record<string, unknown>)
+          typeof data === "object" && data && "code" in (data as Record<string, unknown>)
             ? (data as ApiErrorShape)
             : { code: "ERR_HTTP", message: "Request failed", details: data };
         return {

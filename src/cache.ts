@@ -1,4 +1,5 @@
 import { LRUCache } from "lru-cache";
+
 import type { ApiResponse, CacheAdapter } from "./types";
 
 export class LruCacheAdapter<V = ApiResponse> implements CacheAdapter<V> {

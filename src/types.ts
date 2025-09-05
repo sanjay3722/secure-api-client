@@ -1,12 +1,6 @@
 import type { JWTPayload } from "jose";
 
-export type HttpMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "DELETE"
-  | "PATCH"
-  | "FORMDATA";
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "FORMDATA";
 
 export interface ApiRequest {
   url: string;
@@ -67,9 +61,7 @@ export interface AuthConfig {
   jwt?: JwtOptions;
   onRefresh?: (current: TokenPair) => Promise<TokenPair>;
   isTokenExpired?: (meta: TokenMetadata) => boolean;
-  setTokenMetadata?: (
-    tokens: TokenPair
-  ) => Promise<TokenMetadata> | TokenMetadata;
+  setTokenMetadata?: (tokens: TokenPair) => Promise<TokenMetadata> | TokenMetadata;
 }
 
 export interface EncryptionAdapter {
@@ -106,12 +98,7 @@ export class ApiError extends Error {
   readonly code: string;
   readonly status?: number;
   readonly details?: unknown;
-  constructor(
-    message: string,
-    code = "ERR_API",
-    status?: number,
-    details?: unknown
-  ) {
+  constructor(message: string, code = "ERR_API", status?: number, details?: unknown) {
     super(message);
     this.name = "ApiError";
     this.code = code;
