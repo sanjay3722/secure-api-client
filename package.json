@@ -1,0 +1,51 @@
+{
+  "name": "secure-api-client",
+  "version": "1.0.0",
+  "description": "Framework-agnostic secure API client with caching, streaming, JWT, and optional encrypted gateway.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "api",
+    "client",
+    "fetch",
+    "jwt",
+    "cache",
+    "streaming",
+    "encryption",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "tslib": "^2.8.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "cross-fetch": "^4.1.0",
+    "jose": "^6.1.0",
+    "lru-cache": "^11.2.1",
+    "nanoid": "^5.1.5"
+  }
+}
