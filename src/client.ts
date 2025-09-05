@@ -1,5 +1,3 @@
-import "cross-fetch/polyfill";
-
 import { nanoid } from "nanoid";
 
 import { AuthManager } from "./auth";
