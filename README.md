@@ -1,17 +1,17 @@
-## secure-api-client
+## secure-fetch-client
 
 Framework-agnostic secure API client with JWT auth, caching, streaming, and optional encryption gateway.
 
 ### Install
 
 ```bash
-npm i secure-api-client
+npm i secure-fetch-client
 ```
 
 ### Quick start
 
 ```ts
-import { ApiClient, AesGcmEncryption } from "secure-api-client";
+import { ApiClient, AesGcmEncryption } from "secure-fetch-client";
 
 const client = new ApiClient({ baseUrl: "/api" });
 
@@ -98,4 +98,4 @@ const client = new ApiClient({
 - `ApiClient.withEncryption(secret)` returns a new `ApiClient` with AES-GCM adapter
 - `AesGcmEncryption` implements `EncryptionAdapter`
 
-# secure-api-client
+# secure-fetch-client
