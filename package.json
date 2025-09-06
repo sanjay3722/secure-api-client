@@ -1,7 +1,7 @@
 {
   "name": "secure-fetch-client",
   "version": "1.1.0",
-  "description": "Framework-agnostic secure API client with caching, streaming, JWT, and optional encrypted gateway.",
+  "description": "Secure, robust, and fast API utility library for Angular, React, and Vue. Simplifies API calls, supports mock JSON APIs for testing, and integrates smoothly with modern apps. Includes JWT, LRU cache, streaming, and optional AES-GCM encryption.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -37,10 +37,38 @@
     "cache",
     "streaming",
     "encryption",
-    "typescript"
+    "typescript",
+    "secure api client",
+    "http client",
+    "rest",
+    "webcrypto",
+    "aes-gcm",
+    "lru cache",
+    "token refresh",
+    "angular",
+    "react",
+    "vue",
+    "mock api",
+    "mock json",
+    "testing",
+    "frontend",
+    "browser",
+    "node",
+    "axios alternative",
+    "fetch wrapper",
+    "swr",
+    "react query"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanjay3722/secure-api-client.git"
+  },
+  "homepage": "https://github.com/sanjay3722/secure-api-client#readme",
+  "bugs": {
+    "url": "https://github.com/sanjay3722/secure-api-client/issues"
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",

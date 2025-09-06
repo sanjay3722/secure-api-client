@@ -1,6 +1,14 @@
 ## secure-fetch-client
 
-Framework-agnostic secure API client with JWT auth, caching, streaming, and optional encryption gateway.
+[![npm version](https://img.shields.io/npm/v/secure-fetch-client.svg)](https://www.npmjs.com/package/secure-fetch-client)
+[![npm downloads](https://img.shields.io/npm/dm/secure-fetch-client.svg)](https://www.npmjs.com/package/secure-fetch-client)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+Lightweight, framework-agnostic HTTP client for secure APIs: JWT, LRU cache, streaming, and optional AES‑GCM encryption via WebCrypto with a single decrypting gateway.
+
+### Summary
+
+A secure, robust, and fast API utility library that works seamlessly with any frontend framework, including Angular, React, and Vue. It simplifies API calls, supports mock JSON APIs for testing, and ensures smooth integration with modern applications.
 
 ### Install
 
