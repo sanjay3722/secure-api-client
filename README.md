@@ -49,6 +49,36 @@ await client.request({
 });
 ```
 
+### Mock server
+
+- Pass `mock: true` to return data from a local/mock JSON instead of the live API.
+- The client will GET `{mockBaseUrl}/{mockPath||url}.json` and return its contents.
+- Options:
+  - Request: `mock?: boolean`, `mockPath?: string` (e.g., "/users/list.json")
+  - Client: `mockBaseUrl?: string` (default `"/mocks"`), `mockDelayMs?: number`
+
+Example:
+
+```ts
+const client = new ApiClient({ baseUrl: "/api", mockBaseUrl: "/mocks", mockDelayMs: 300 });
+
+// Will fetch "/mocks/users.json" and return it
+const users = await client.request<{ users: Array<{ id: string }> }>({
+  url: "/users",
+  method: "GET",
+  mock: true,
+});
+
+// Explicit mock path
+const post = await client.request<{ ok: boolean }>({
+  url: "/posts",
+  method: "POST",
+  body: { title: "hello" },
+  mock: true,
+  mockPath: "/posts/create.json",
+});
+```
+
 ### React/Angular/Vue usage
 
 - React: call in `useEffect`, SWR/React Query compatible. Provide `fetch` via options to integrate.

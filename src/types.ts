@@ -12,6 +12,9 @@ export interface ApiRequest {
   cacheKey?: string;
   stream?: boolean;
   streamHandlers?: StreamHandlers<Uint8Array>;
+  // Mock options
+  mock?: boolean;
+  mockPath?: string; // explicit path to a mock JSON file (e.g., "/mocks/users.json")
 }
 
 export type ApiResponse<T = unknown> =
@@ -86,6 +89,9 @@ export interface ClientOptions {
   cache?: CacheAdapter<ApiResponse> | false;
   cacheTtlMs?: number;
   enableInFlightDedup?: boolean;
+  // Mock server configuration
+  mockBaseUrl?: string; // default "/mocks"
+  mockDelayMs?: number; // optional artificial delay
 }
 
 export interface ApiErrorShape {

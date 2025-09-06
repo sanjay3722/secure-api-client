@@ -25,6 +25,25 @@ const buildUrl = (
   return url.toString();
 };
 
+const resolveBaseUrl = (base: string | undefined): string => {
+  if (!base) return typeof window !== "undefined" ? window.location.origin : "http://localhost";
+  try {
+    // absolute URL
+    return new URL(base).toString();
+  } catch {
+    // relative path like "/mocks" -> resolve against origin
+    const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost";
+    return new URL(base, origin).toString();
+  }
+};
+
+const buildMockUrl = (mockBaseUrl: string | undefined, mockPath: string): string => {
+  const base = resolveBaseUrl(mockBaseUrl);
+  const normalizedBase = base.endsWith("/") ? base : base + "/";
+  const normalizedPath = mockPath.startsWith("/") ? mockPath.slice(1) : mockPath;
+  return new URL(normalizedPath, normalizedBase).toString();
+};
+
 const methodToInit = (
   method: HttpMethod,
   body: unknown,
@@ -70,6 +89,8 @@ interface InternalOptions {
   cache: ClientOptions["cache"];
   cacheTtlMs: number;
   enableInFlightDedup: boolean;
+  mockBaseUrl?: string;
+  mockDelayMs?: number;
 }
 
 export class ApiClient {
@@ -89,6 +110,8 @@ export class ApiClient {
       cache: options?.cache ?? undefined,
       cacheTtlMs: options?.cacheTtlMs ?? 10_000,
       enableInFlightDedup: options?.enableInFlightDedup ?? true,
+      mockBaseUrl: options?.mockBaseUrl ?? "/mocks",
+      mockDelayMs: options?.mockDelayMs ?? 0,
     };
     this.auth = new AuthManager(this.options.auth);
     this.cache =
@@ -144,6 +167,32 @@ export class ApiClient {
     method: HttpMethod,
     req: ApiRequest,
   ): Promise<ApiResponse<T>> {
+    // Mock handling: fetch JSON from mock server instead of hitting real API
+    if (req.mock) {
+      try {
+        const path = req.mockPath ?? req.url;
+        const filePath = path.endsWith(".json") ? path : `${path}.json`;
+        const mockUrl = buildMockUrl(this.options.mockBaseUrl, filePath);
+        const res = await this.options.fetch(mockUrl, { method: "GET" });
+        if (this.options.mockDelayMs && this.options.mockDelayMs > 0) {
+          await new Promise((r) => setTimeout(r, this.options.mockDelayMs));
+        }
+        if (!res.ok) {
+          return {
+            ok: false,
+            status: res.status,
+            headers: res.headers,
+            error: { code: "ERR_MOCK", message: `Mock not found: ${filePath}` },
+          };
+        }
+        const data = (await res.json()) as T;
+        return { ok: true, status: 200, headers: res.headers, data };
+      } catch (e) {
+        const err = toApiError(e, "ERR_MOCK");
+        return { ok: false, status: 0, headers: null, error: makeErrorShape(err) };
+      }
+    }
+
     const headers: Record<string, string> = {
       ...defaultHeadersFor(method, this.options.encryption),
       ...this.options.defaultHeaders,
