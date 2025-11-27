@@ -59,6 +59,11 @@
     "node",
     "axios alternative",
     "fetch wrapper",
+    "fetch client",
+    "fetch interceptor",
+    "secure fetch",
+    "secure api calls",
+    "javascript http client",
     "swr",
     "react query"
   ],

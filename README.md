@@ -6,9 +6,9 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/sanjay3722/secure-api-client/ci.yml?branch=main&label=build)](https://github.com/sanjay3722/secure-api-client/actions/workflows/ci.yml)
 
-> Lightweight, framework-agnostic HTTP client for secure APIs: JWT, LRU cache, streaming, and optional AES‑GCM encryption via WebCrypto with a single decrypting gateway.
+> A lightweight, secure **fetch wrapper** and **JavaScript HTTP client** for making **secure API calls**. The perfect **Axios alternative** with built-in JWT authentication, LRU caching, streaming support, and optional AES‑GCM encryption via WebCrypto.
 
-A secure, robust, and fast API utility library that works seamlessly with any frontend framework, including Angular, React, and Vue. It simplifies API calls, supports mock JSON APIs for testing, and ensures smooth integration with modern applications.
+**secure-fetch-client** is a powerful **fetch client** and **fetch interceptor** that provides a secure, robust, and fast API utility library. It works seamlessly with any frontend framework, including Angular, React, and Vue. This **secure fetch** solution simplifies **secure API calls**, supports mock JSON APIs for testing, and ensures smooth integration with modern applications.
 
 ## 📦 Install
 
@@ -59,15 +59,19 @@ await client.request({
 
 ## 🎯 Features
 
-- ✅ **JWT Authentication** - Automatic token management with refresh callbacks
+- ✅ **Secure Fetch Wrapper** - A modern **fetch client** that wraps the native fetch API with enhanced security
+- ✅ **Axios Alternative** - Lightweight replacement for Axios with better TypeScript support and smaller bundle size
+- ✅ **Fetch Interceptor** - Built-in request/response interceptors for authentication and error handling
+- ✅ **JWT Authentication** - Automatic token management with refresh callbacks for secure API calls
 - ✅ **LRU Cache** - Built-in response caching with TTL support
 - ✅ **In-Flight Deduplication** - Prevents duplicate concurrent requests
-- ✅ **AES-GCM Encryption** - Optional end-to-end encryption via WebCrypto API
+- ✅ **AES-GCM Encryption** - Optional end-to-end encryption via WebCrypto API for secure API calls
 - ✅ **Streaming Support** - Handle streaming responses with chunk callbacks
 - ✅ **Mock Server** - Easy testing with local JSON mock files
 - ✅ **TypeScript** - Full type safety and IntelliSense support
 - ✅ **Framework Agnostic** - Works with React, Angular, Vue, and vanilla JS
 - ✅ **Zero Dependencies** (runtime) - Uses native Web APIs
+- ✅ **JavaScript HTTP Client** - Complete HTTP client solution for browser and Node.js
 
 ## 📚 Documentation
 
@@ -412,7 +416,11 @@ const client = new ApiClient({
 
 ## 🎨 Framework Integration
 
+This **fetch wrapper** and **JavaScript HTTP client** works seamlessly with all major frameworks. As an **Axios alternative**, it provides a modern **fetch client** with **fetch interceptor** capabilities for **secure API calls**.
+
 ### React
+
+Use this **fetch client** in your React components for **secure API calls**:
 
 ```tsx
 import { useEffect, useState } from "react";
@@ -455,6 +463,8 @@ function Users() {
 
 ### Angular
 
+This **JavaScript HTTP client** integrates seamlessly with Angular services:
+
 ```ts
 import { Injectable } from "@angular/core";
 import { ApiClient } from "secure-fetch-client";
@@ -470,6 +480,8 @@ export class ApiService {
 ```
 
 ### Vue
+
+Use the **fetch wrapper** in Vue composables for **secure API calls**:
 
 ```ts
 import { ref, onMounted } from "vue";
@@ -491,10 +503,13 @@ export function useUsers() {
 
 ## 🔒 Security Notes
 
+This **fetch wrapper** is designed for **secure API calls** with built-in security features:
+
 - **Encryption without gateway**: Only hides payload bodies. URLs and headers remain visible in browser devtools.
 - **Encryption with gateway**: Routes all encrypted requests to a single endpoint, hiding URLs, methods, and payloads. Requires server-side decryption.
 - **JWT tokens**: Stored in memory by default. Use custom storage for persistence (localStorage, IndexedDB, etc.).
 - **HTTPS**: Always use HTTPS in production to protect data in transit.
+- **Fetch interceptor**: Built-in request/response interceptors for authentication and security headers.
 
 ## 📖 API Reference
 
@@ -572,6 +587,18 @@ Check out the [examples](./examples) folder for:
 - [StackBlitz](https://stackblitz.com/edit/secure-fetch-client-demo)
 - [CodeSandbox](https://codesandbox.io/s/secure-fetch-client-demo)
 
+## 🔍 Why Choose secure-fetch-client?
+
+**secure-fetch-client** is the ideal **Axios alternative** for developers who need a lightweight **fetch wrapper** with enhanced security features. Unlike Axios, this **fetch client** is:
+
+- **Smaller bundle size** - Zero runtime dependencies, uses native Web APIs
+- **Better TypeScript support** - Full type safety out of the box
+- **Built-in security** - JWT handling, encryption, and secure API call features
+- **Modern architecture** - Built on native fetch with **fetch interceptor** capabilities
+- **Framework agnostic** - Works with any JavaScript framework or vanilla JS
+
+Perfect for making **secure API calls** in React, Angular, Vue, or any JavaScript application. This **JavaScript HTTP client** provides everything you need for production-ready API communication.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -579,3 +606,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 MIT © [sanjay3722](https://github.com/sanjay3722)
+
+---
+
+**Keywords**: secure fetch, fetch wrapper, fetch client, fetch interceptor, Axios alternative, secure API calls, JavaScript HTTP client
